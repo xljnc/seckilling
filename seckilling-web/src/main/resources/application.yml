@@ -1,1 +1,29 @@
+spring:
+  profiles:
+    active: @activatedProperties@
+  application:
+    name: seckilling-service
+  main:
+    allowBeanDefinitionOverriding: true
+  jackson:
+    time-zone: GMT+8
+  cache:
+    type: CAFFEINE
+    cache-names:
+    - templateImage
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=300s,softValues
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 10MB
+
+logging:
+  config: classpath:logback-spring.xml
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+
+
+
 
