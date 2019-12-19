@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- 配置文件轮转 -->
+    <appender name="project" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>/app/seckilling/log/project.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/app/seckilling/log/project.log.%d{yyyy-MM-dd}</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%date [%thread] %-5level %logger{50}:%L - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <!-- 测试环境+开发环境. 多个使用逗号隔开. -->loh
+    <springProfile name="local,ii">
+        <root level="INFO">
+            <appender-ref ref="project"/>
+        </root>
+    </springProfile>
+
+    <!-- 生产环境. -->
+    <springProfile name="prod">
+        <root level="error">
+            <appender-ref ref="project"/>
+        </root>
+    </springProfile>
+</configuration>
