@@ -20,5 +20,5 @@ public class SeckillingSubmitDTO implements Serializable {
 
     private static final long serialVersionUID = -8993867565756545723L;
 
-    private Long customerId;
+    private String orderDetail;
 }

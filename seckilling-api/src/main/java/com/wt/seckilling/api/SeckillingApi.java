@@ -14,10 +14,16 @@ import javax.validation.Valid;
 @RequestMapping("/seckilling")
 public interface SeckillingApi {
 
+    /**
+     * 获取秒杀链接
+     **/
     @GetMapping("/url/{productId}/{customerId}")
     RestResult<String> getSeckillingUrl(@PathVariable("productId") Long productId, @PathVariable("customerId") Long customerId);
 
+    /**
+     * 秒杀，提交订单
+     **/
     @PostMapping("/{productId}/{customerId}/{randomValue}/submit")
-    RestResult<Integer> submitSeckilling(@PathVariable("productId") Long productId, @PathVariable("customerId") Long customerId, @PathVariable("customerId") String randomValue, @RequestBody @Valid SeckillingSubmitDTO submitDTO);
+    RestResult<Integer> submitSeckilling(@PathVariable("productId") Long productId, @PathVariable("customerId") Long customerId, @PathVariable("randomValue") Integer randomValue, @RequestBody @Valid SeckillingSubmitDTO submitDTO);
 
 }
