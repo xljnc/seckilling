@@ -5,7 +5,7 @@
 
     <parent>
         <artifactId>seckilling</artifactId>
-        <groupId>com.wt.test</groupId>
+        <groupId>com.wt</groupId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -16,7 +16,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.wt.test</groupId>
+            <groupId>com.wt</groupId>
             <artifactId>seckilling-service</artifactId>
             <version>${parent.version}</version>
         </dependency>

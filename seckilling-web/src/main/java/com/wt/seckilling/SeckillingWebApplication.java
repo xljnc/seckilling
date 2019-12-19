@@ -1,4 +1,4 @@
-package com.wt.test.seckilling;
+package com.wt.seckilling;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.wt.test.seckilling;
+package com.wt.seckilling;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
