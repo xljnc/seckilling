@@ -9,4 +9,6 @@ import com.wt.seckilling.entity.Product;
  * @description:
  */
 public interface ProductService extends IService<Product> {
+
+    boolean decreaseDatabaseStock(Product product, int num);
 }

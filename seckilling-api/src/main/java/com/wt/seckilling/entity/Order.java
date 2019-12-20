@@ -29,6 +29,11 @@ public class Order implements Serializable {
     private Long orderId;
 
     /**
+     * 订单号
+     **/
+    private String orderCode;
+
+    /**
      * 用户ID
      **/
     private Long customerId;

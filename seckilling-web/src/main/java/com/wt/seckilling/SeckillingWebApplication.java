@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@EnableCaching
+//@EnableCaching
 @EnableTransactionManagement
 @EnableConfigurationProperties
 public class SeckillingWebApplication {

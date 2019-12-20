@@ -1,1 +1,63 @@
+service:
+  limit:
+    rate: 200.0
+    semaphore: 200
 
+product:
+  stock:
+    fault-tolerance: 1.2
+
+url:
+  check: true
+
+spring:
+  redis:
+    host:
+    port:
+    password:
+  cache:
+    caffeine:
+      spec: maximumSize=500,expireAfterAccess=300s,softValues
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 10MB
+  stream:
+    rocketmq:
+      binder:
+        name-server:
+    bindings:
+      seckillingOrderInput:
+        consumer:
+          concurrency: 5
+
+
+seckilling:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://:3306/husky?zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useAffectedRows=true
+    username:
+    password:
+
+###web配置
+web:
+  allowedOrigins: '*'
+
+
+###健康监测显示细节
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+
+debug: true
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

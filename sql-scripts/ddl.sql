@@ -2,6 +2,7 @@
 create table husky.orders
 (
   order_id     bigint unsigned NOT NULL AUTO_INCREMENT primary key,
+  order_code   varchar(64)     not null unique comment '订单号',
   product_id   bigint          not null comment '商品ID',
   customer_id  bigint          not null comment '用户ID',
   order_detail varchar(128)    not null comment '订单详情',

@@ -14,5 +14,8 @@ public interface ProductBiz {
 
     void updateProduct(ProductUpdateDTO updateDTO);
 
-    void decreaseRedisStock(Long productId, int num);
+    void decreaseRedisStock(Long productId, int num,Long customerId);
+
+    void decreaseDatabaseStock(Long productId, int num);
+
 }

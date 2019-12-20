@@ -1,7 +1,7 @@
 package com.wt.seckilling.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wt.seckilling.entity.Product;
+import com.wt.seckilling.entity.Order;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,6 +10,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @description:
  */
 @Mapper
-public interface ProductMapper extends BaseMapper<Product> {
-    int decreaseDatabaseStock(Long productId,Long version, int num);
+public interface OrderMapper extends BaseMapper<Order> {
 }

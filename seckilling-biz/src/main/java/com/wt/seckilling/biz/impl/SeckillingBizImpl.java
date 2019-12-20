@@ -1,10 +1,15 @@
 package com.wt.seckilling.biz.impl;
 
 import ai.ii.common.redis.util.RedisUtil;
-import com.wt.seckilling.biz.SeckillingBiz;
+import ai.ii.common.util.UUIDUtil;
 import com.wt.seckilling.aop.SemaphoreServiceLimit;
+import com.wt.seckilling.biz.ProductBiz;
+import com.wt.seckilling.biz.SeckillingBiz;
+import com.wt.seckilling.dto.OrderCreateDTO;
 import com.wt.seckilling.dto.SeckillingSubmitDTO;
 import com.wt.seckilling.exception.SeckillingRuntimeException;
+import com.wt.seckilling.mq.SeckillingMQProducer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +22,7 @@ import java.util.Random;
  * @description:
  */
 @Service
+@Slf4j
 public class SeckillingBizImpl implements SeckillingBiz {
 
     private Random random = new Random();
@@ -28,6 +34,12 @@ public class SeckillingBizImpl implements SeckillingBiz {
 
     @Value("${url.check:true}")
     private Boolean urlCheck;
+
+    @Autowired
+    private ProductBiz productBiz;
+
+    @Autowired
+    private SeckillingMQProducer seckillingMQProducer;
 
     @Override
     public String getSeckillingUrl(Long productId, Long customerId) {
@@ -46,8 +58,18 @@ public class SeckillingBizImpl implements SeckillingBiz {
             if (!checkResult)
                 throw new SeckillingRuntimeException(9001, "URL不合法");
         }
-        
-
+        productBiz.decreaseRedisStock(productId, 1, customerId);
+        OrderCreateDTO createDTO = OrderCreateDTO.builder()
+                .orderCode(UUIDUtil.getUUID())
+                .customerId(customerId)
+                .productId(productId)
+                .orderDetail(submitDTO.getOrderDetail()).build();
+        try {
+            seckillingMQProducer.sendObject(createDTO, "order");
+        } catch (Exception e) {
+            log.error("发送MQ订单消息失败", e);
+            throw new SeckillingRuntimeException(9008, "发送MQ订单消息失败");
+        }
     }
 
     private boolean urlCheck(Long productId, Long customerId, Integer randomValue) {

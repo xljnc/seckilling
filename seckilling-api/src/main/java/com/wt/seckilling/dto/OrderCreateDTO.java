@@ -20,6 +20,11 @@ public class OrderCreateDTO implements Serializable {
     private static final long serialVersionUID = 3648726857641213148L;
 
     /**
+     * 订单号
+     **/
+    private String orderCode;
+
+    /**
      * 用户ID
      **/
     private Long customerId;

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wt.seckilling.mapper.ProductMapper">
+
+    <update id="decreaseDatabaseStock">
+        update product
+        set stock = stock -  #{num,jdbcType=INTEGER},
+        version = version + 1
+        where product_id =  #{productId,jdbcType=BIGINT}
+              and version =  #{version,jdbcType=BIGINT}
+              and stock >= #{num,jdbcType=INTEGER}
+    </update>
+</mapper>

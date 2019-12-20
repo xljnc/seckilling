@@ -1,4 +1,4 @@
-package com.wt.seckilling.config;
+package com.wt.seckilling.mq;
 
 import org.apache.rocketmq.common.message.MessageConst;
 import org.springframework.beans.factory.annotation.Autowired;
