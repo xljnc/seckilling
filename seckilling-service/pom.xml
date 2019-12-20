@@ -10,10 +10,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>seckilling-service</name>
+
     <artifactId>seckilling-service</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>

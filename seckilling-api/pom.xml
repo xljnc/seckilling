@@ -10,6 +10,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>seckilling-api</name>
+
     <artifactId>seckilling-api</artifactId>
     <packaging>jar</packaging>
 

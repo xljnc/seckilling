@@ -11,6 +11,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>seckilling-biz</name>
+
     <artifactId>seckilling-biz</artifactId>
     <packaging>jar</packaging>
 

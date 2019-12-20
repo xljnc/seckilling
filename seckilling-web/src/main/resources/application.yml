@@ -17,6 +17,26 @@ spring:
     multipart:
       maxFileSize: 10MB
       maxRequestSize: 10MB
+  cloud:
+    stream:
+      rocketmq:
+        bindings:
+          seckillingOutput:
+            producer:
+              group: seckilling-output-group
+              sync: true
+          seckillingOrderInput:
+            consumer:
+              orderly: true
+              tags: order
+      bindings:
+        seckillingOutput:
+          destination: seckilling-topic
+          content-type: application/json
+        seckillingOrderInput:
+          destination: seckilling-topic
+          content-type: application/json
+          group: seckilling-input-group-order
 
 logging:
   config: classpath:logback-spring.xml

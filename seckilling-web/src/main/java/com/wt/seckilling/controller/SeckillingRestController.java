@@ -1,7 +1,7 @@
 package com.wt.seckilling.controller;
 
 import ai.ii.common.dto.RestResult;
-import com.wt.seckillin.biz.SeckillingBiz;
+import com.wt.seckilling.biz.SeckillingBiz;
 import com.wt.seckilling.api.SeckillingApi;
 import com.wt.seckilling.dto.SeckillingSubmitDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ public class SeckillingRestController implements SeckillingApi {
 
     @Override
     public RestResult<Integer> submitSeckilling(Long productId, Long customerId, Integer randomValue, SeckillingSubmitDTO submitDTO) {
-        return null;
+        seckillingBiz.submitSeckilling(productId, customerId, randomValue, submitDTO);
+        return new RestResult<>(RestResult.DEFAULT_SUCCESS_CODE, RestResult.DEFAULT_SUCCESS_MSG, null);
     }
 }

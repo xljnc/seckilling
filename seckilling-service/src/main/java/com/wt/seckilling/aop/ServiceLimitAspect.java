@@ -25,10 +25,10 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ServiceLimitAspect implements InitializingBean {
 
-    @Value("${service.limit.rate:100.0}")
+    @Value("${service.limit.rate:200.0}")
     private Double rateServiceLimit;
 
-    @Value("${service.limit.semaphore:100}")
+    @Value("${service.limit.semaphore:200}")
     private Integer semaphoreServiceLimit;
 
     private RateLimiter rateLimiter;
