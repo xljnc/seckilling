@@ -1,5 +1,0 @@
-service:
-  limit:
-    rate: 100.0
-    semaphore: 100
-
