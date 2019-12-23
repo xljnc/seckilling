@@ -1,5 +1,6 @@
 package com.wt.seckilling.biz;
 
+import com.wt.seckilling.dto.OrderCreateDTO;
 import com.wt.seckilling.dto.SeckillingSubmitDTO;
 
 /**
@@ -12,4 +13,6 @@ public interface SeckillingBiz {
     String getSeckillingUrl(Long productId, Long customerId);
 
     void submitSeckilling(Long productId, Long customerId, Integer randomValue, SeckillingSubmitDTO submitDTO);
+
+    void handleMqSeckillingMessage(OrderCreateDTO createDTO);
 }

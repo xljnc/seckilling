@@ -3,6 +3,7 @@ package com.wt.seckilling.biz.impl;
 import ai.ii.common.redis.util.RedisUtil;
 import ai.ii.common.util.UUIDUtil;
 import com.wt.seckilling.aop.SemaphoreServiceLimit;
+import com.wt.seckilling.biz.OrderBiz;
 import com.wt.seckilling.biz.ProductBiz;
 import com.wt.seckilling.biz.SeckillingBiz;
 import com.wt.seckilling.dto.OrderCreateDTO;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
@@ -40,6 +42,9 @@ public class SeckillingBizImpl implements SeckillingBiz {
 
     @Autowired
     private SeckillingMQProducer seckillingMQProducer;
+
+    @Autowired
+    private OrderBiz orderBiz;
 
     @Override
     public String getSeckillingUrl(Long productId, Long customerId) {
@@ -70,6 +75,13 @@ public class SeckillingBizImpl implements SeckillingBiz {
             log.error("发送MQ订单消息失败", e);
             throw new SeckillingRuntimeException(9008, "发送MQ订单消息失败");
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void handleMqSeckillingMessage(OrderCreateDTO createDTO) {
+        orderBiz.createOrder(createDTO);
+        productBiz.decreaseDatabaseStock(createDTO.getProductId(), 1);
     }
 
     private boolean urlCheck(Long productId, Long customerId, Integer randomValue) {

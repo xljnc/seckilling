@@ -6,6 +6,7 @@ import com.wt.seckilling.biz.ProductBiz;
 import com.wt.seckilling.dto.ProductCreateDTO;
 import com.wt.seckilling.dto.ProductUpdateDTO;
 import com.wt.seckilling.entity.Product;
+import com.wt.seckilling.exception.MessageAlreadyConsumedException;
 import com.wt.seckilling.exception.SeckillingRuntimeException;
 import com.wt.seckilling.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class ProductBizImpl implements ProductBiz {
         product = productService.getById(product.getProductId());
         //这个用法不好，写redis应该在用户读取的时候，Demo代码是为了方便
         redisUtil.setObjectValue(redisKeyPrefix + productRedisPrefix + product.getProductId(), product);
-        redisUtil.setObjectValue(redisKeyPrefix + productStockRedisPrefix + product.getProductId(), ((Double)(product.getStock() * productStockFaultTolerance)).intValue());
+        redisUtil.setObjectValue(redisKeyPrefix + productStockRedisPrefix + product.getProductId(), ((Double) (product.getStock() * productStockFaultTolerance)).intValue());
 //        redisUtil.setObjectValue(redisKeyPrefix + productOrdersRedisPrefix + product.getProductId(), new HashSet<Long>());
     }
 
@@ -65,7 +66,9 @@ public class ProductBizImpl implements ProductBiz {
         //这个用法不好,这里应该是删除缓存，而不是读取后写入，Demo代码是为了方便
         product = productService.getById(product.getProductId());
         redisUtil.setObjectValue(redisKeyPrefix + productRedisPrefix + product.getProductId(), product);
-        redisUtil.setObjectValue(redisKeyPrefix + productStockRedisPrefix + product.getProductId(),((Double)(product.getStock() * productStockFaultTolerance)).intValue());
+        redisUtil.setObjectValue(redisKeyPrefix + productStockRedisPrefix + product.getProductId(), ((Double) (product.getStock() * productStockFaultTolerance)).intValue());
+        redisUtil.deleteKey(redisKeyPrefix + productOrdersRedisPrefix + product.getProductId());
+
     }
 
     @Override
@@ -91,7 +94,7 @@ public class ProductBizImpl implements ProductBiz {
         if (product == null)
             throw new SeckillingRuntimeException(9005, "商品不存在");
         if (product.getStock().compareTo(num) < 0)
-            throw new SeckillingRuntimeException(9002, "商品库存不足");
+            throw new MessageAlreadyConsumedException(9002, "商品库存不足");
         boolean result = productService.decreaseDatabaseStock(product, num);
         if (!result)
             throw new SeckillingRuntimeException(9006, "数据库库存扣减失败");
