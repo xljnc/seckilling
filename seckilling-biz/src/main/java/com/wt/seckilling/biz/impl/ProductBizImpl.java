@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashSet;
 
 /**
  * @author: qiyu
@@ -36,7 +35,7 @@ public class ProductBizImpl implements ProductBiz {
 
     private String productStockRedisPrefix = "PRODUCT::STOCK::";
 
-    private String productOrdersRedisPrefix = "PRODUCT::ORDERS";
+    private String productOrdersRedisPrefix = "PRODUCT::ORDERS::";
 
     @Value("${product.stock.fault-tolerance:1.2}")
     private Double productStockFaultTolerance;
@@ -52,8 +51,8 @@ public class ProductBizImpl implements ProductBiz {
         product = productService.getById(product.getProductId());
         //这个用法不好，写redis应该在用户读取的时候，Demo代码是为了方便
         redisUtil.setObjectValue(redisKeyPrefix + productRedisPrefix + product.getProductId(), product);
-        redisUtil.setObjectValue(redisKeyPrefix + productStockRedisPrefix + product.getProductId(), Integer.valueOf(String.valueOf(productStockFaultTolerance * productStockFaultTolerance)));
-        redisUtil.setObjectValue(redisKeyPrefix + productOrdersRedisPrefix + product.getProductId(), new HashSet<Long>());
+        redisUtil.setObjectValue(redisKeyPrefix + productStockRedisPrefix + product.getProductId(), ((Double)(product.getStock() * productStockFaultTolerance)).intValue());
+//        redisUtil.setObjectValue(redisKeyPrefix + productOrdersRedisPrefix + product.getProductId(), new HashSet<Long>());
     }
 
     @Override
@@ -66,19 +65,19 @@ public class ProductBizImpl implements ProductBiz {
         //这个用法不好,这里应该是删除缓存，而不是读取后写入，Demo代码是为了方便
         product = productService.getById(product.getProductId());
         redisUtil.setObjectValue(redisKeyPrefix + productRedisPrefix + product.getProductId(), product);
-        redisUtil.setObjectValue(redisKeyPrefix + productStockRedisPrefix + product.getProductId(), Integer.valueOf(String.valueOf(productStockFaultTolerance * productStockFaultTolerance)));
+        redisUtil.setObjectValue(redisKeyPrefix + productStockRedisPrefix + product.getProductId(),((Double)(product.getStock() * productStockFaultTolerance)).intValue());
     }
 
     @Override
     public void decreaseRedisStock(Long productId, int num, Long customerId) {
-        String stockRedisKey = redisKeyPrefix + productStockRedisPrefix + productId;
-        Integer stock = (Integer) redisUtil.getObjectValue(stockRedisKey);
-        if (stock < num)
-            throw new SeckillingRuntimeException(9002, "库存不足");
         String ordersRedisKey = redisKeyPrefix + productOrdersRedisPrefix + productId;
         boolean orderExisted = redisUtil.sIsMember(ordersRedisKey, customerId);
         if (orderExisted)
             throw new SeckillingRuntimeException(9007, String.format("用户%x重复下单商品%x", customerId, productId));
+        String stockRedisKey = redisKeyPrefix + productStockRedisPrefix + productId;
+        Integer stock = (Integer) redisUtil.getObjectValue(stockRedisKey);
+        if (stock < num)
+            throw new SeckillingRuntimeException(9002, "库存不足");
         boolean result = redisUtil.decrement(stockRedisKey, Long.valueOf(num));
         if (!result)
             throw new SeckillingRuntimeException(9006, "redis库存扣减失败");

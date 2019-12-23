@@ -1,6 +1,7 @@
 package com.wt.seckilling.aop;
 
 import com.google.common.util.concurrent.RateLimiter;
+import com.wt.seckilling.exception.SeckillingRuntimeException;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -71,9 +72,14 @@ public class ServiceLimitAspect implements InitializingBean {
             if (flag)
                 result = joinPoint.proceed();
             return result;
+        } catch (SeckillingRuntimeException e) {
+//            semaphore.release();
+            throw e;
         } catch (Throwable e) {
             log.error("Semaphore service limit error", e);
             return null;
+        }finally {
+            semaphore.release();
         }
     }
 
