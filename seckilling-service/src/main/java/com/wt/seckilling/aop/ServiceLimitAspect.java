@@ -67,10 +67,13 @@ public class ServiceLimitAspect implements InitializingBean {
     @Around("SemaphoreServiceLimitAspect()")
     public Object semaphoreLimit(ProceedingJoinPoint joinPoint) {
         try {
+            log.info("Semaphore before available permits:{}",semaphore.availablePermits());
             Boolean flag = semaphore.tryAcquire(1, 200, TimeUnit.MILLISECONDS);
             Object result = null;
-            if (flag)
+            if (flag) {
+                log.info("Semaphore after available permits:{}",semaphore.availablePermits());
                 result = joinPoint.proceed();
+            }
             return result;
         } catch (SeckillingRuntimeException e) {
 //            semaphore.release();
